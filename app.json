@@ -1,0 +1,61 @@
+{
+  "name": "Hedera Web3 Console",
+  "description": "Secure Hedera blockchain account management with analytics",
+  "repository": "https://github.com/criptomining/Hedera",
+  "keywords": [
+    "hedera",
+    "blockchain",
+    "web3",
+    "hts",
+    "account-management"
+  ],
+  "env": {
+    "HEDERA_NETWORK": {
+      "description": "Hedera network: testnet or mainnet",
+      "value": "testnet",
+      "required": true
+    },
+    "OPERATOR_ID": {
+      "description": "Your Hedera operator account ID (0.0.xxxxx)",
+      "required": true
+    },
+    "OPERATOR_KEY": {
+      "description": "Your Hedera operator private key (keep secure!)",
+      "required": true
+    },
+    "JWT_SECRET": {
+      "description": "Secret key for JWT tokens (generate a random string)",
+      "generator": "secret"
+    },
+    "NODE_ENV": {
+      "value": "production"
+    },
+    "LOG_LEVEL": {
+      "value": "info"
+    },
+    "ALLOWED_ORIGINS": {
+      "description": "Comma-separated list of allowed origins",
+      "value": "https://yourdomain.com"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql:hobby-dev",
+      "as": "DATABASE"
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "scripts": {
+    "postdeploy": "node scripts/setup-db.js"
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  }
+}

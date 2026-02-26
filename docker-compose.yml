@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  hedera-app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      HEDERA_NETWORK: testnet
+      OPERATOR_ID: ${OPERATOR_ID}
+      OPERATOR_KEY: ${OPERATOR_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: sqlite:///app/database/accounts.db
+      LOG_LEVEL: debug
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./database:/app/database
+    networks:
+      - hedera-net
+    restart: unless-stopped
+
+  # Optional: PostgreSQL for production analytics
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: hedera
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: hedera_analytics
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - hedera-net
+    restart: unless-stopped
+
+  # Optional: Redis for caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - hedera-net
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  hedera-net:
+    driver: bridge

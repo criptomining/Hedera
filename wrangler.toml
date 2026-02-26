@@ -1,0 +1,37 @@
+name = "hedera-worker"
+main = "src/cloudflare/worker.js"
+compatibility_date = "2024-01-01"
+
+# Worker script configuration
+env = "production"
+
+# Environment variables for different regions
+[env.production]
+route = "https://hedera.example.com/*"
+zone_id = "YOUR_ZONE_ID"
+
+[[env.production.vars]]
+RATE_LIMIT = "100"
+
+[[env.production.kv_namespaces]]
+binding = "RATE_LIMITER"
+id = "YOUR_KV_NAMESPACE_ID"
+
+[[env.production.kv_namespaces]]
+binding = "CACHE_STORE"
+id = "YOUR_CACHE_NAMESPACE_ID"
+
+# US Region
+[env.us]
+route = "https://us.hedera.example.com/*"
+vars = { ORIGIN_US = "https://us-origin.herokuapp.com", ORIGIN_EU = "https://eu-origin.herokuapp.com", ORIGIN_ASIA = "https://asia-origin.herokuapp.com" }
+
+# EU Region
+[env.eu]
+route = "https://eu.hedera.example.com/*"
+vars = { ORIGIN_US = "https://us-origin.herokuapp.com", ORIGIN_EU = "https://eu-origin.herokuapp.com", ORIGIN_ASIA = "https://asia-origin.herokuapp.com" }
+
+# Asia Region
+[env.asia]
+route = "https://asia.hedera.example.com/*"
+vars = { ORIGIN_US = "https://us-origin.herokuapp.com", ORIGIN_EU = "https://eu-origin.herokuapp.com", ORIGIN_ASIA = "https://asia-origin.herokuapp.com" }
